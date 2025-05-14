@@ -1,3 +1,5 @@
+![Thread-Forum](https://socialify.git.ci/phanatagama/Thread-Forum/image?custom_description=RESTful+APIs+with+Test-Drive+Development&description=1&font=KoHo&forks=1&issues=1&language=1&name=1&pattern=Charlie+Brown&pulls=1&stargazers=1&theme=Auto)
+
 # Submission: MBDE 2025
 
 This repository contains the submission for the **Menjadi Backend Developer Expert 2025** project. The project is part of the requirements for completing the Dicoding course.
@@ -11,7 +13,7 @@ This repository contains the submission for the **Menjadi Backend Developer Expe
 - [License](#license)
 
 ## Overview
-This project demonstrates the implementation of a Test Drive Driven to build RESTful APIs with NodeJs.
+This project demonstrates the implementation of a Test Drive Development to build RESTful APIs with NodeJs.
 
 ## Features
 - Create an threads post.
