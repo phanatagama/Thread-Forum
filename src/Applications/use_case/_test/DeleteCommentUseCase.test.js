@@ -37,13 +37,12 @@ describe('DeleteCommentUseCase', () => {
             threadId: 'thread-123',
         };
         const mockCommentRepository = new CommentRepository();
-        
+
         mockCommentRepository.getCommentById = jest.fn()
             .mockImplementation(() => Promise.resolve(null));
-        
+
         const deleteCommentUseCase = new DeleteCommentUseCase({
             commentRepository: mockCommentRepository,
-        
         });
         // Action & Assert
         await expect(deleteCommentUseCase.execute(useCasePayload))
@@ -60,13 +59,13 @@ describe('DeleteCommentUseCase', () => {
             threadId: 'thread-123',
         };
         const mockCommentRepository = new CommentRepository();
-        
+
         mockCommentRepository.getCommentById = jest.fn()
-            .mockImplementation(() => Promise.resolve({ id: 'comment-123', threadId: 'thread-456', userId: 'user-123' }));
-        
+            .mockImplementation(() => Promise.resolve({ id: 'comment-123', threadId: 'thread-456', userId: 'user-123', content: 'Comment Content', date: '2023-10-01T00:00:00.000Z', isDeleted: false }));
+
         const deleteCommentUseCase = new DeleteCommentUseCase({
             commentRepository: mockCommentRepository,
-            
+
         });
         // Action & Assert
         await expect(deleteCommentUseCase.execute(useCasePayload))
@@ -74,7 +73,7 @@ describe('DeleteCommentUseCase', () => {
             .toThrowError('DELETE_COMMENT_USE_CASE.THREAD_ID_NOT_MATCH');
     }
     );
-            
+
 
     it('should throw error if userId not the same as comment owner', async () => {
         // Arrange
@@ -84,13 +83,13 @@ describe('DeleteCommentUseCase', () => {
             threadId: 'thread-123',
         };
         const mockCommentRepository = new CommentRepository();
-        
+
         mockCommentRepository.getCommentById = jest.fn()
-            .mockImplementation(() => Promise.resolve({ id: 'comment-123', threadId: 'thread-123', userId: 'user-456' }));
+            .mockImplementation(() => Promise.resolve({ id: 'comment-123', threadId: 'thread-123', userId: 'user-456', content: 'Comment Content', date: '2023-10-01T00:00:00.000Z', isDeleted: false }));
 
         const deleteCommentUseCase = new DeleteCommentUseCase({
             commentRepository: mockCommentRepository,
-            
+
         });
         // Action & Assert
         await expect(deleteCommentUseCase.execute(useCasePayload))
@@ -104,14 +103,13 @@ describe('DeleteCommentUseCase', () => {
         const useCasePayload = {
             commentId: 'comment-123',
             threadId: 'thread-123',
-            // token: 'Bearer token',
             userId: 'user-123',
         };
         const mockCommentRepository = new CommentRepository();
-        
-        
+
+
         mockCommentRepository.getCommentById = jest.fn()
-            .mockImplementation(() => Promise.resolve({ id: 'comment-123', threadId: 'thread-123', userId: 'user-123' }));
+            .mockImplementation(() => Promise.resolve({ id: 'comment-123', threadId: 'thread-123', userId: 'user-123', content: 'Comment Content', date: '2023-10-01T00:00:00.000Z', isDeleted: false }));
         mockCommentRepository.deleteCommentById = jest.fn()
             .mockImplementation(() => Promise.resolve());
 

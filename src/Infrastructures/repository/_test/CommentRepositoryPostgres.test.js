@@ -147,6 +147,7 @@ describe('CommentRepositoryPostgres', () => {
             expect(comments[0].content).toEqual(payload.content);
             expect(comments[0].date).toBeDefined();
             expect(comments[0].username).toBeDefined();
+            expect(comments[0].isDeleted).toEqual(false);
         });
 
         it('should return empty array when comments are not found', async () => {

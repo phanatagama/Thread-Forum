@@ -2,7 +2,7 @@ const AddThreadUseCase = require('../AddThreadUseCase');
 const RegisterThread = require('../../../Domains/threads/entities/RegisterThread');
 const RegisteredThread = require('../../../Domains/threads/entities/RegisteredThread');
 const ThreadRepository = require('../../../Domains/threads/ThreadRepository');
-
+const Thread = require('../../../Domains/threads/entities/Thread');
 
 describe('AddThreadUseCase', () => {
     it('should orchestrating the add thread action correctly', async () => {
@@ -21,13 +21,13 @@ describe('AddThreadUseCase', () => {
         mockThreadRepository.addThread = jest.fn()
             .mockImplementation(() => Promise.resolve(mockRegisteredThread));
         mockThreadRepository.getThreadById = jest.fn()
-            .mockImplementation(() => Promise.resolve({
+            .mockImplementation(() => Promise.resolve(new Thread({
                 id: 'thread-123',
                 title: useCasePayload.title,
                 body: useCasePayload.body,
                 date: '2023-10-01T00:00:00.000Z',
                 username: 'user-123',
-            }));
+            })));
         const addThreadUseCase = new AddThreadUseCase({
             threadRepository: mockThreadRepository,
         });

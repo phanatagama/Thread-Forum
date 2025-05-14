@@ -12,12 +12,7 @@ class GetThreadByIdUseCase {
     }
     
     const comments = await this._commentRepository.getCommentsByThreadId(threadId);
-    // const mappedComments = comments.map((comment) => ({
-    //   id: comment.id,
-    //   username: comment.username,
-    //   date: comment.date,
-    //   content: comment.content,
-    // }));
+    const mappedComments = comments.map(this.mappingComments);
 
     return {
       id: thread.id,
@@ -25,10 +20,18 @@ class GetThreadByIdUseCase {
       body: thread.body,
       date: thread.date,
       username: thread.username,
-      comments: comments,
+      comments: mappedComments,
     }
   }
 
+  mappingComments(comment) {
+    return ({
+      id: comment.id,
+      username: comment.username,
+      date: comment.date,
+      content: comment.isDeleted ? "**komentar telah dihapus**" : comment.content,
+    })
+  }
 }
 
 module.exports = GetThreadByIdUseCase;
