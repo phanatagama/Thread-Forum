@@ -77,7 +77,7 @@ describe('/threads endpoint', () => {
         it('should response 401 when user not authenticated', async () => {
             // Arrange
             const requestPayload = {
-                title: 'Thread Title',
+                title: 'Thread Title Wadooh',
                 body: 'Thread Body',
             };
             const server = await createServer(container);
@@ -91,6 +91,8 @@ describe('/threads endpoint', () => {
 
             // Assert
             const responseJson = JSON.parse(response.payload);
+            console.log(responseJson);
+            console.log('ini response');
             expect(response.statusCode).toEqual(401);
             expect(responseJson.status).toEqual('fail');
             expect(responseJson.message).toEqual('Missing authentication');

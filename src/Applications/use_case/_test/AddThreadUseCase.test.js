@@ -2,7 +2,7 @@ const AddThreadUseCase = require('../AddThreadUseCase');
 const RegisterThread = require('../../../Domains/threads/entities/RegisterThread');
 const RegisteredThread = require('../../../Domains/threads/entities/RegisteredThread');
 const ThreadRepository = require('../../../Domains/threads/ThreadRepository');
-const AuthenticationTokenManager = require('../../security/AuthenticationTokenManager');
+
 
 describe('AddThreadUseCase', () => {
     it('should orchestrating the add thread action correctly', async () => {
@@ -10,7 +10,8 @@ describe('AddThreadUseCase', () => {
         const useCasePayload = {
             title: 'Thread Title',
             body: 'Thread Body',
-            refreshToken: 'Bearer refresh_token',
+            userId: 'user-123',
+            // refreshToken: 'Bearer refresh_token',
         };
         const mockRegisteredThread = new RegisteredThread({
             id: 'thread-123',
@@ -18,7 +19,6 @@ describe('AddThreadUseCase', () => {
             body: useCasePayload.body,
         });
         const mockThreadRepository = new ThreadRepository();
-        const mockAuthenticationTokenManager = new AuthenticationTokenManager();
         mockThreadRepository.addThread = jest.fn()
             .mockImplementation(() => Promise.resolve(mockRegisteredThread));
         mockThreadRepository.getThreadById = jest.fn()
@@ -28,12 +28,8 @@ describe('AddThreadUseCase', () => {
                 body: useCasePayload.body,
                 username: 'user-123',
             }));
-        mockAuthenticationTokenManager.decodePayload = jest.fn()
-            .mockImplementation(() => Promise.resolve({ id: 'user-123' }));
         const addThreadUseCase = new AddThreadUseCase({
             threadRepository: mockThreadRepository,
-            
-            authenticationTokenManager: mockAuthenticationTokenManager,
         });
 
         // Action
@@ -50,9 +46,6 @@ describe('AddThreadUseCase', () => {
             body: useCasePayload.body,
             userId: 'user-123',
         }));
-        // expect(mockAuthenticationTokenManager.verifyRefreshToken).toBeCalledWith(useCasePayload.refreshToken);
-        // expect(mockAuthenticationRepository.checkAvailabilityToken).toBeCalledWith(useCasePayload.refreshToken);
-        expect(mockAuthenticationTokenManager.decodePayload).toBeCalledWith('refresh_token');
     }
     );
     it('should throw error when payload did not contain token', async () => {
@@ -63,7 +56,7 @@ describe('AddThreadUseCase', () => {
         };
         const addThreadUseCase = new AddThreadUseCase({},{},{});
 
-        // Action & Assert
+    
         await expect(addThreadUseCase.execute(useCasePayload)).rejects.toThrowError('ADD_THREAD_USE_CASE.NOT_CONTAIN_REFRESH_TOKEN');
     }
     );
@@ -72,11 +65,12 @@ describe('AddThreadUseCase', () => {
         const useCasePayload = {
             title: 'Thread Title',
             body: 'Thread Body',
-            refreshToken: 123,
+            // refreshToken: 123,
+            userId: 123,
         };
         const addThreadUseCase = new AddThreadUseCase({});
 
-        // Action & Assert
+    
         await expect(addThreadUseCase.execute(useCasePayload)).rejects.toThrowError('ADD_THREAD_USE_CASE.NOT_MEET_DATA_TYPE_SPECIFICATION');
     }
     );

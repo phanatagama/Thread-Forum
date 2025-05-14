@@ -12,12 +12,13 @@ class CommentsHandler {
 
     async postCommentHandler(request, h) {
         
-        const token = request.headers.authorization;
+        // const token = request.headers.authorization;
         const { id } = request.params;
+        const { id: userId } = request.auth.credentials;    
         
         const addCommentUseCase = this._container.getInstance(AddCommentUseCase.name);
         
-        const addedComment = await addCommentUseCase.execute({ ...request.payload, threadId: id, token: token });
+        const addedComment = await addCommentUseCase.execute({ ...request.payload, threadId: id, userId });
 
         const response = h.response({
             status: 'success',
@@ -33,10 +34,11 @@ class CommentsHandler {
         return response;
     }
     async deleteCommentHandler(request) {
-        const token = request.headers.authorization;
+        // const token = request.headers.authorization;
+        const { id: userId } = request.auth.credentials;
         const { threadId, commentId } = request.params;
         const deleteCommentUseCase = this._container.getInstance(DeleteCommentUseCase.name);
-        await deleteCommentUseCase.execute({ threadId, commentId, token });
+        await deleteCommentUseCase.execute({ threadId, commentId, userId });
 
         return {
             status: 'success',

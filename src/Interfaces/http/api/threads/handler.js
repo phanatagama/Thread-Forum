@@ -9,25 +9,39 @@ class ThreadsHandler {
     }
 
     async postThreadHandler(request, h) {
-        const  token  = request.headers.authorization;
-        const addedThread = this._container.getInstance(AddThreadUseCase.name)
-        const result = await addedThread.execute({ ...request.payload, refreshToken: token });
+        try {
 
-        const response = h.response({
-            status: 'success',
-            data: {
-                'addedThread':result,
-            },
-        });
-        response.code(201);
-        return response;
+            // const token = request.headers.authorization;
+            const { id:userId } = request.auth.credentials;
+
+
+            const addedThread = this._container.getInstance(AddThreadUseCase.name)
+            const result = await addedThread.execute({ ...request.payload, userId });
+            // const result = await addedThread.execute({ ...request.payload, refreshToken: token });
+
+            const response = h.response({
+                status: 'success',
+                data: {
+                    'addedThread': result,
+                },
+            });
+            response.code(201);
+            return response;
+        } catch (error) {
+            console.log(error);
+            console.log(request.headers.authorization);
+            console.log(request.auth.credentials);
+            console.log(request.payload);
+            console.log("INI HANDLER POST THREAD");
+            throw error;
+        }
     }
 
-    async getThreadByIdHandler(request,h) {
+    async getThreadByIdHandler(request, h) {
         const { threadId } = request.params;
         const thread = this._container.getInstance(GetThreadByIdUseCase.name)
         const result = await thread.execute(threadId);
-        
+
         return h.response({
             status: 'success',
             data: {

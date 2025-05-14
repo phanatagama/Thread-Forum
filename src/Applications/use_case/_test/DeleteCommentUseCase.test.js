@@ -1,13 +1,12 @@
 const CommentRepository = require('../../../Domains/comments/CommentRepository');
 const DeleteCommentUseCase = require('../DeleteCommentUseCase');
-const AuthenticationTokenManager = require('../../security/AuthenticationTokenManager');
-const { token } = require('@hapi/jwt');
+
 
 describe('DeleteCommentUseCase', () => {
     it('should throw error if use case payload not contain commentId', async () => {
         // Arrange
         const useCasePayload = {};
-        const deleteCommentUseCase = new DeleteCommentUseCase({},{});
+        const deleteCommentUseCase = new DeleteCommentUseCase({},);
 
         // Action & Assert
         await expect(deleteCommentUseCase.execute(useCasePayload))
@@ -19,10 +18,11 @@ describe('DeleteCommentUseCase', () => {
         // Arrange
         const useCasePayload = {
             commentId: 123,
-            token: 'Bearer token',
+            // token: 'Bearer token',
+            userId: 'user-123',
             threadId: 'thread-123',
         };
-        const deleteCommentUseCase = new DeleteCommentUseCase({},{});
+        const deleteCommentUseCase = new DeleteCommentUseCase({});
 
         // Action & Assert
         await expect(deleteCommentUseCase.execute(useCasePayload))
@@ -34,18 +34,18 @@ describe('DeleteCommentUseCase', () => {
         // Arrange
         const useCasePayload = {
             commentId: 'comment-123',
-            token: 'Bearer token',
+            // token: 'Bearer token',
+            userId: 'user-123',
             threadId: 'thread-123',
         };
         const mockCommentRepository = new CommentRepository();
-        const mockAuthenticationTokenManager = new AuthenticationTokenManager();
+        
         mockCommentRepository.getCommentById = jest.fn()
             .mockImplementation(() => Promise.resolve(null));
-        mockAuthenticationTokenManager.decodePayload = jest.fn()
-            .mockImplementation(() => Promise.resolve({ id: 'user-123' }));
+        
         const deleteCommentUseCase = new DeleteCommentUseCase({
             commentRepository: mockCommentRepository,
-            authenticationTokenManager: mockAuthenticationTokenManager,
+        
         });
         // Action & Assert
         await expect(deleteCommentUseCase.execute(useCasePayload))
@@ -58,18 +58,18 @@ describe('DeleteCommentUseCase', () => {
         // Arrange
         const useCasePayload = {
             commentId: 'comment-123',
-            token: 'Bearer token',
+            // token: 'Bearer token',
+            userId: 'user-123',
             threadId: 'thread-123',
         };
         const mockCommentRepository = new CommentRepository();
-        const mockAuthenticationTokenManager = new AuthenticationTokenManager();
+        
         mockCommentRepository.getCommentById = jest.fn()
             .mockImplementation(() => Promise.resolve({ id: 'comment-123', threadId: 'thread-456', userId: 'user-123' }));
-        mockAuthenticationTokenManager.decodePayload = jest.fn()
-            .mockImplementation(() => Promise.resolve({ id: 'user-123' }));
+        
         const deleteCommentUseCase = new DeleteCommentUseCase({
             commentRepository: mockCommentRepository,
-            authenticationTokenManager: mockAuthenticationTokenManager,
+            
         });
         // Action & Assert
         await expect(deleteCommentUseCase.execute(useCasePayload))
@@ -83,18 +83,18 @@ describe('DeleteCommentUseCase', () => {
         // Arrange
         const useCasePayload = {
             commentId: 'comment-123',
-            token: 'Bearer token',
+            // token: 'Bearer token',
+            userId: 'user-123',
             threadId: 'thread-123',
         };
         const mockCommentRepository = new CommentRepository();
-        const mockAuthenticationTokenManager = new AuthenticationTokenManager();
+        
         mockCommentRepository.getCommentById = jest.fn()
             .mockImplementation(() => Promise.resolve({ id: 'comment-123', threadId: 'thread-123', userId: 'user-456' }));
-        mockAuthenticationTokenManager.decodePayload = jest.fn()
-            .mockImplementation(() => Promise.resolve({ id: 'user-123' }));
+
         const deleteCommentUseCase = new DeleteCommentUseCase({
             commentRepository: mockCommentRepository,
-            authenticationTokenManager: mockAuthenticationTokenManager,
+            
         });
         // Action & Assert
         await expect(deleteCommentUseCase.execute(useCasePayload))
@@ -108,24 +108,23 @@ describe('DeleteCommentUseCase', () => {
         const useCasePayload = {
             commentId: 'comment-123',
             threadId: 'thread-123',
-            token: 'Bearer token',
+            // token: 'Bearer token',
             userId: 'user-123',
         };
         const mockCommentRepository = new CommentRepository();
-        const mockAuthenticationTokenManager = new AuthenticationTokenManager();
+        
         
         mockCommentRepository.getCommentById = jest.fn()
             .mockImplementation(() => Promise.resolve({ id: 'comment-123', threadId: 'thread-123', userId: 'user-123' }));
         mockCommentRepository.deleteCommentById = jest.fn()
             .mockImplementation(() => Promise.resolve());
 
-        mockAuthenticationTokenManager.decodePayload = jest.fn()
-            .mockImplementation(() => Promise.resolve({ id: 'user-123' }));
+        
         
 
         const deleteCommentUseCase = new DeleteCommentUseCase({
             commentRepository: mockCommentRepository,
-            authenticationTokenManager: mockAuthenticationTokenManager,
+        
 
         });
 

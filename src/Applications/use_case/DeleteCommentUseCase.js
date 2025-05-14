@@ -1,14 +1,15 @@
 class DeleteCommentUseCase {
-    constructor({ commentRepository, authenticationTokenManager }) {
+    constructor({ commentRepository}) {
         this._commentRepository = commentRepository;
-        this._authenticationTokenManager = authenticationTokenManager;
+        
     }
 
     async execute(useCasePayload) {
         this._verifyPayload(useCasePayload);
-        const { threadId, commentId, token } = useCasePayload;
-        const accessToken = token.split(' ')[1];
-        const { id: userId } = await this._authenticationTokenManager.decodePayload(accessToken);
+        const { threadId, commentId, userId } = useCasePayload;
+        // const { threadId, commentId, token } = useCasePayload;
+        // const accessToken = token.split(' ')[1];
+        // const { id: userId } = await this._authenticationTokenManager.decodePayload(accessToken);
         const comment = await this._commentRepository.getCommentById(commentId);
         if (!comment) {
             throw new Error('DELETE_COMMENT_USE_CASE.COMMENT_NOT_FOUND');
@@ -24,12 +25,12 @@ class DeleteCommentUseCase {
         return this._commentRepository.deleteCommentById(commentId);
     }
 
-    _verifyPayload({ threadId, commentId, token }) {
-        if (!commentId || !token || !threadId) {
+    _verifyPayload({ threadId, commentId, userId }) {
+        if (!commentId || !userId || !threadId) {
             throw new Error('DELETE_COMMENT_USE_CASE.NOT_CONTAIN_NEEDED_PROPERTY');
         }
 
-        if (typeof commentId !== 'string' || typeof token !== 'string' || typeof threadId !== 'string') {
+        if (typeof commentId !== 'string' || typeof userId !== 'string' || typeof threadId !== 'string') {
             throw new Error('DELETE_COMMENT_USE_CASE.PAYLOAD_NOT_MEET_DATA_TYPE_SPECIFICATION');
         }
     }

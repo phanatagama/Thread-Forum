@@ -12,7 +12,27 @@ const createServer = async (container) => {
     host: process.env.HOST,
     port: process.env.PORT,
   });
-  
+     await server.register([
+        {
+            plugin: Jwt
+        }
+    ])
+    // Definisi Auth Strategy
+    server.auth.strategy('forum_api_jwt', 'jwt', {
+        keys: process.env.ACCESS_TOKEN_KEY,
+        verify: {
+            aud: false,
+            iss: false,
+            sub: false,
+            maxAgeSec: process.env.ACCESS_TOKEN_AGE
+        },
+        validate: (artifacts) => ({
+            isValid: true,
+            credentials: {
+                id: artifacts.decoded.payload.id
+            }
+        })
+    })
 
 
   await server.register([
