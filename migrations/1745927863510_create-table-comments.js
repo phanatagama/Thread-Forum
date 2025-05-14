@@ -38,6 +38,7 @@ exports.up = (pgm) => {
         },
     });
     
+    
 };
 
 /**
@@ -46,7 +47,6 @@ exports.up = (pgm) => {
  * @returns {Promise<void> | void}
  */
 exports.down = (pgm) => {
-    
     pgm.dropTable('comments');
     
 };

@@ -37,6 +37,7 @@ describe('RegisterComment entities', () => {
         // Assert
         expect(registerComment.content).toEqual(payload.content);
         expect(registerComment.userId).toEqual(payload.userId);
+        expect(registerComment.threadId).toEqual(payload.threadId);
     });
 }
 );

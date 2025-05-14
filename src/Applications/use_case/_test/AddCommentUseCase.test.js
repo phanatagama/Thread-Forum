@@ -8,7 +8,7 @@ describe('AddCommentUseCase', () => {
     it('should throw error if there is no token', async () => {
         // Arrange
         const useCasePayload = {};
-        const addCommentUseCase = new AddCommentUseCase({}, {}, );
+        const addCommentUseCase = new AddCommentUseCase({}, {},);
 
         // Action & Assert
         await expect(addCommentUseCase.execute(useCasePayload))
@@ -72,7 +72,6 @@ describe('AddCommentUseCase', () => {
     it('should throw error if content not string', async () => {
         // Arrange
         const useCasePayload = {
-            // token: 'Bearer token',
             userId: 'user-123',
             threadId: 'thread-123',
             content: 123,

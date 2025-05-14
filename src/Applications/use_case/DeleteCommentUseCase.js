@@ -1,15 +1,11 @@
 class DeleteCommentUseCase {
     constructor({ commentRepository}) {
-        this._commentRepository = commentRepository;
-        
+        this._commentRepository = commentRepository;   
     }
 
     async execute(useCasePayload) {
         this._verifyPayload(useCasePayload);
         const { threadId, commentId, userId } = useCasePayload;
-        // const { threadId, commentId, token } = useCasePayload;
-        // const accessToken = token.split(' ')[1];
-        // const { id: userId } = await this._authenticationTokenManager.decodePayload(accessToken);
         const comment = await this._commentRepository.getCommentById(commentId);
         if (!comment) {
             throw new Error('DELETE_COMMENT_USE_CASE.COMMENT_NOT_FOUND');
@@ -20,7 +16,6 @@ class DeleteCommentUseCase {
         if (comment.userId !== userId) {
             throw new Error('DELETE_COMMENT_USE_CASE.USER_ID_NOT_MATCH');
         }
-
 
         return this._commentRepository.deleteCommentById(commentId);
     }

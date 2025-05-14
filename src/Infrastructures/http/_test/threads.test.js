@@ -91,8 +91,6 @@ describe('/threads endpoint', () => {
 
             // Assert
             const responseJson = JSON.parse(response.payload);
-            console.log(responseJson);
-            console.log('ini response');
             expect(response.statusCode).toEqual(401);
             expect(responseJson.status).toEqual('fail');
             expect(responseJson.message).toEqual('Missing authentication');
@@ -110,15 +108,6 @@ describe('/threads endpoint', () => {
             const server = await createServer(container);
             await ThreadsTableTestHelper.addThread({ ...requestPayload, userId: 'user-123' });
 
-            // await CommentsTableTestHelper.addComment({
-            //     id: 'comment-123',
-            //     threadId: requestPayload.threadId,
-            //     content: 'Comment Content',
-            //     userId: 'user-123',
-            // });
-            // await CommentsTableTestHelper.getCommentById('comment-123');
-
-
             // Action
             const response = await server.inject({
                 method: 'GET',
@@ -127,7 +116,7 @@ describe('/threads endpoint', () => {
 
             // Assert
             const responseJson = JSON.parse(response.payload);
-            console.log(responseJson);
+            
             expect(response.statusCode).toEqual(200);
             expect(responseJson.status).toEqual('success');
             expect(responseJson.data.thread).toBeDefined();

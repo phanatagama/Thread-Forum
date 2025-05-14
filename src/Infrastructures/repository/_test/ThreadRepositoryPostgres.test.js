@@ -5,7 +5,7 @@ const RegisteredThread = require('../../../Domains/threads/entities/RegisteredTh
 const RegisterThread = require('../../../Domains/threads/entities/RegisterThread');
 const Thread = require('../../../Domains/threads/entities/Thread');
 const NotFoundError = require('../../../Commons/exceptions/NotFoundError');
-const InvariantError = require('../../../Commons/exceptions/InvariantError');
+
 const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper');
 
 describe('ThreadRepositoryPostgres', () => {
@@ -35,6 +35,9 @@ describe('ThreadRepositoryPostgres', () => {
         // Assert
         const threads = await ThreadsTableTestHelper.getThreadById('thread-1234');
         expect(threads).toHaveLength(1);
+        expect(threads[0].title).toEqual(registerThread.title);
+        expect(threads[0].body).toEqual(registerThread.body);
+        expect(threads[0].id).toEqual('thread-1234');
     });
 
     it('should return registered thread correctly', async () => {

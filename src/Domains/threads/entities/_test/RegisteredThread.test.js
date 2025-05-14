@@ -38,5 +38,6 @@ describe('RegisteredThread entities', () => {
     // Assert
     expect(registeredThread.title).toEqual(payload.title);
     expect(registeredThread.body).toEqual(payload.body);
+    expect(registeredThread.id).toEqual(payload.id);
   });
 });

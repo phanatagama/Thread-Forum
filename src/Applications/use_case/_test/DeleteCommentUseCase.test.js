@@ -18,7 +18,6 @@ describe('DeleteCommentUseCase', () => {
         // Arrange
         const useCasePayload = {
             commentId: 123,
-            // token: 'Bearer token',
             userId: 'user-123',
             threadId: 'thread-123',
         };
@@ -34,7 +33,6 @@ describe('DeleteCommentUseCase', () => {
         // Arrange
         const useCasePayload = {
             commentId: 'comment-123',
-            // token: 'Bearer token',
             userId: 'user-123',
             threadId: 'thread-123',
         };
@@ -58,7 +56,6 @@ describe('DeleteCommentUseCase', () => {
         // Arrange
         const useCasePayload = {
             commentId: 'comment-123',
-            // token: 'Bearer token',
             userId: 'user-123',
             threadId: 'thread-123',
         };
@@ -83,7 +80,6 @@ describe('DeleteCommentUseCase', () => {
         // Arrange
         const useCasePayload = {
             commentId: 'comment-123',
-            // token: 'Bearer token',
             userId: 'user-123',
             threadId: 'thread-123',
         };
@@ -119,13 +115,8 @@ describe('DeleteCommentUseCase', () => {
         mockCommentRepository.deleteCommentById = jest.fn()
             .mockImplementation(() => Promise.resolve());
 
-        
-        
-
         const deleteCommentUseCase = new DeleteCommentUseCase({
             commentRepository: mockCommentRepository,
-        
-
         });
 
         // Act

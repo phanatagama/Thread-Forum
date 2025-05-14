@@ -11,7 +11,6 @@ describe('AddThreadUseCase', () => {
             title: 'Thread Title',
             body: 'Thread Body',
             userId: 'user-123',
-            // refreshToken: 'Bearer refresh_token',
         };
         const mockRegisteredThread = new RegisteredThread({
             id: 'thread-123',
@@ -26,6 +25,7 @@ describe('AddThreadUseCase', () => {
                 id: 'thread-123',
                 title: useCasePayload.title,
                 body: useCasePayload.body,
+                date: '2023-10-01T00:00:00.000Z',
                 username: 'user-123',
             }));
         const addThreadUseCase = new AddThreadUseCase({
@@ -37,15 +37,16 @@ describe('AddThreadUseCase', () => {
 
         // Assert
         expect(registeredThread).toStrictEqual({
-            id: 'thread-123',
+            id: mockRegisteredThread.id,
             title: useCasePayload.title,
-            owner: 'user-123',
+            owner: useCasePayload.userId,
         });
         expect(mockThreadRepository.addThread).toBeCalledWith(new RegisterThread({
             title: useCasePayload.title,
             body: useCasePayload.body,
-            userId: 'user-123',
+            userId: useCasePayload.userId,
         }));
+        expect(mockThreadRepository.getThreadById).toBeCalledWith(mockRegisteredThread.id);
     }
     );
     it('should throw error when payload did not contain token', async () => {
@@ -54,9 +55,9 @@ describe('AddThreadUseCase', () => {
             title: 'Thread Title',
             body: 'Thread Body',
         };
-        const addThreadUseCase = new AddThreadUseCase({},{},{});
+        const addThreadUseCase = new AddThreadUseCase({});
 
-    
+        // Action & Assert
         await expect(addThreadUseCase.execute(useCasePayload)).rejects.toThrowError('ADD_THREAD_USE_CASE.NOT_CONTAIN_REFRESH_TOKEN');
     }
     );
@@ -65,14 +66,24 @@ describe('AddThreadUseCase', () => {
         const useCasePayload = {
             title: 'Thread Title',
             body: 'Thread Body',
-            // refreshToken: 123,
             userId: 123,
         };
-        const addThreadUseCase = new AddThreadUseCase({});
 
-    
+        const addThreadUseCase = new AddThreadUseCase({});    
+        // Action & Assert
         await expect(addThreadUseCase.execute(useCasePayload)).rejects.toThrowError('ADD_THREAD_USE_CASE.NOT_MEET_DATA_TYPE_SPECIFICATION');
     }
     );
+
+    it('should throw error when payload did not contain needed property', async () => {
+        // Arrange
+        const useCasePayload = {
+            userId: 'user-123',
+        };
+        const addThreadUseCase = new AddThreadUseCase({});    
+        // Action & Assert
+        await expect(addThreadUseCase.execute(useCasePayload)).rejects.toThrowError('ADD_THREAD_USE_CASE.NOT_CONTAIN_NEEDED_PROPERTY');
+    }
+    );  
 
 });

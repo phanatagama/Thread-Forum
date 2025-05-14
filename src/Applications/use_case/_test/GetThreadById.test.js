@@ -42,17 +42,20 @@ describe('GetThreadByIdUseCase', () => {
             threadId: 'thread-123',
         };
         const mockThreadRepository = new ThreadRepository();
-        const mockCommentRepository = new CommentRepository();
+        
         mockThreadRepository.getThreadById = jest.fn()
             .mockImplementation(() => Promise.resolve(null));
         const getThreadByIdUseCase = new GetThreadByIdUseCase({
             threadRepository: mockThreadRepository,
-            commentRepository: mockCommentRepository,
+            commentRepository: {},
         });
 
         // Action & Assert
         await expect(getThreadByIdUseCase.execute(useCasePayload.threadId))
             .rejects
             .toThrowError('GET_THREAD_USE_CASE.THREAD_NOT_FOUND');
+
+        expect(mockThreadRepository.getThreadById).toBeCalledWith(useCasePayload.threadId);
+        
     });
 });

@@ -34,8 +34,8 @@ class CommentRepositoryPostgres extends CommentRepository {
 
     async deleteCommentById(id) {
         const query = {
-            text: 'UPDATE comments SET "isDeleted" = true, content = $1 WHERE id = $2',
-            values: ["**komentar telah dihapus**", id],
+            text: 'UPDATE comments SET "isDeleted" = true WHERE id = $1',
+            values: [ id],
         };
 
         await this._pool.query(query);
@@ -44,7 +44,16 @@ class CommentRepositoryPostgres extends CommentRepository {
 
     async getCommentsByThreadId(threadId) {
         const query = {
-            text: 'SELECT comments.id, comments.content, comments.date, users.username FROM comments LEFT JOIN users ON users.id = comments."userId" WHERE comments."threadId" = $1',
+            text: `SELECT comments.id, 
+                  CASE 
+                      WHEN comments."isDeleted" = true THEN '**komentar telah dihapus**' 
+                      ELSE comments.content 
+                  END AS content, 
+                  comments.date, 
+                  users.username 
+               FROM comments 
+               LEFT JOIN users ON users.id = comments."userId" 
+               WHERE comments."threadId" = $1`,
             values: [threadId],
         };
 

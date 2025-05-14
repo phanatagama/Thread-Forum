@@ -28,6 +28,12 @@ describe('CommentRepositoryPostgres', () => {
             // Assert
             const comments = await CommentsTableTestHelper.getCommentById('comment-123');
             expect(comments).toHaveLength(1);
+            expect(comments[0].content).toEqual(registerComment.content);
+            expect(comments[0].threadId).toEqual(registerComment.threadId);
+            expect(comments[0].userId).toEqual(registerComment.userId);
+            expect(comments[0].id).toEqual('comment-123');
+            expect(comments[0].isDeleted).toEqual(false);
+            expect(comments[0].date).toBeDefined();
         });
 
         it('should return registered comment correctly', async () => {
@@ -78,7 +84,7 @@ describe('CommentRepositoryPostgres', () => {
             await CommentsTableTestHelper.addComment(payload);
 
             // Action
-            const comment = await commentRepositoryPostgres.getCommentById('comment-123');
+            const comment = await commentRepositoryPostgres.getCommentById(payload.id);
 
             // Assert
             expect(comment.id).toStrictEqual(payload.id);
@@ -86,6 +92,7 @@ describe('CommentRepositoryPostgres', () => {
             expect(comment.content).toStrictEqual(payload.content);
             expect(comment.userId).toStrictEqual(payload.userId);
             expect(comment.isDeleted).toStrictEqual(payload.isDeleted);
+            expect(comment.date).toBeDefined();
         });
     }
     );
@@ -109,6 +116,11 @@ describe('CommentRepositoryPostgres', () => {
             const comments = await CommentsTableTestHelper.getCommentById('comment-123');
             expect(comments).toHaveLength(1);
             expect(comments[0].isDeleted).toEqual(true);
+            expect(comments[0].content).toEqual(registerComment.content);
+            expect(comments[0].threadId).toEqual(registerComment.threadId);
+            expect(comments[0].userId).toEqual(registerComment.userId);
+            expect(comments[0].id).toEqual('comment-123');
+            
         });
     });
 
@@ -131,6 +143,10 @@ describe('CommentRepositoryPostgres', () => {
 
             // Assert
             expect(comments).toHaveLength(1);
+            expect(comments[0].id).toEqual(payload.id);
+            expect(comments[0].content).toEqual(payload.content);
+            expect(comments[0].date).toBeDefined();
+            expect(comments[0].username).toBeDefined();
         });
 
         it('should return empty array when comments are not found', async () => {
@@ -142,6 +158,8 @@ describe('CommentRepositoryPostgres', () => {
 
             // Assert
             expect(comments).toHaveLength(0);
+            expect(comments).toEqual([]);
+
         });
     }
     );
