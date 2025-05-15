@@ -74,6 +74,7 @@ describe('GetThreadByIdUseCase', () => {
                 date: '2023-10-01T00:00:00.000Z',
                 content: 'This is a comment',
                 isDeleted: false,
+                likecount: '0',
             },
             {
                 id: 'comment-124',
@@ -81,6 +82,7 @@ describe('GetThreadByIdUseCase', () => {
                 date: '2023-10-02T00:00:00.000Z',
                 content: 'This comment is deleted',
                 isDeleted: true,
+                likecount: '0',
             },
         ];
         const expectedMappedComments = [
@@ -89,12 +91,14 @@ describe('GetThreadByIdUseCase', () => {
                 username: 'user1',
                 date: '2023-10-01T00:00:00.000Z',
                 content: 'This is a comment',
+                likeCount: 0,
             },
             {
                 id: 'comment-124',
                 username: 'user2',
                 date: '2023-10-02T00:00:00.000Z',
                 content: '**komentar telah dihapus**',
+                likeCount: 0,
             },
         ];
         const getThreadByIdUseCase = new GetThreadByIdUseCase({});
