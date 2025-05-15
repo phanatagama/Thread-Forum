@@ -120,7 +120,8 @@ describe('CommentRepositoryPostgres', () => {
             expect(comments[0].threadId).toEqual(registerComment.threadId);
             expect(comments[0].userId).toEqual(registerComment.userId);
             expect(comments[0].id).toEqual('comment-123');
-            
+            expect(comments[0].date).toBeDefined();
+
         });
     });
 

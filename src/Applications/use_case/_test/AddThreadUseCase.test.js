@@ -12,14 +12,18 @@ describe('AddThreadUseCase', () => {
             body: 'Thread Body',
             userId: 'user-123',
         };
-        const mockRegisteredThread = new RegisteredThread({
+        const expectedValue = new RegisteredThread({
             id: 'thread-123',
             title: useCasePayload.title,
             body: useCasePayload.body,
         });
         const mockThreadRepository = new ThreadRepository();
         mockThreadRepository.addThread = jest.fn()
-            .mockImplementation(() => Promise.resolve(mockRegisteredThread));
+            .mockImplementation(() => Promise.resolve(new RegisteredThread({
+                id: 'thread-123',
+                title: useCasePayload.title,
+                body: useCasePayload.body,
+            })));
         mockThreadRepository.getThreadById = jest.fn()
             .mockImplementation(() => Promise.resolve(new Thread({
                 id: 'thread-123',
@@ -37,7 +41,7 @@ describe('AddThreadUseCase', () => {
 
         // Assert
         expect(registeredThread).toStrictEqual({
-            id: mockRegisteredThread.id,
+            id: expectedValue.id,
             title: useCasePayload.title,
             owner: useCasePayload.userId,
         });
@@ -46,7 +50,7 @@ describe('AddThreadUseCase', () => {
             body: useCasePayload.body,
             userId: useCasePayload.userId,
         }));
-        expect(mockThreadRepository.getThreadById).toBeCalledWith(mockRegisteredThread.id);
+        expect(mockThreadRepository.getThreadById).toBeCalledWith(expectedValue.id);
     }
     );
     it('should throw error when payload did not contain token', async () => {

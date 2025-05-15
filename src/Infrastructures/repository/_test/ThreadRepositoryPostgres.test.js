@@ -38,6 +38,8 @@ describe('ThreadRepositoryPostgres', () => {
         expect(threads[0].title).toEqual(registerThread.title);
         expect(threads[0].body).toEqual(registerThread.body);
         expect(threads[0].id).toEqual('thread-1234');
+        expect(threads[0].userId).toEqual(registerThread.userId);
+        expect(threads[0].date).toEqual(expect.any(Date));
     });
 
     it('should return registered thread correctly', async () => {
