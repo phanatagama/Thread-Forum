@@ -2,9 +2,14 @@ const InvariantError = require('../../../Commons/exceptions/InvariantError');
 const pool = require('../../database/postgres/pool');
 const CommentRepositoryPostgres = require('../CommentRepositoryPostgres');
 const CommentsTableTestHelper = require('../../../../tests/CommentsTableTestHelper');
+const ThreadsTableTestHelper = require('../../../../tests/ThreadsTableTestHelper');
+const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper');
+const NotFoundError = require('../../../Commons/exceptions/NotFoundError');
 describe('CommentRepositoryPostgres', () => {
     afterEach(async () => {
         await CommentsTableTestHelper.cleanTable();
+        await ThreadsTableTestHelper.cleanTable();
+        await UsersTableTestHelper.cleanTable();
     });
 
     afterAll(async () => {
@@ -120,7 +125,8 @@ describe('CommentRepositoryPostgres', () => {
             expect(comments[0].threadId).toEqual(registerComment.threadId);
             expect(comments[0].userId).toEqual(registerComment.userId);
             expect(comments[0].id).toEqual('comment-123');
-            
+            expect(comments[0].date).toBeDefined();
+
         });
     });
 
@@ -148,6 +154,8 @@ describe('CommentRepositoryPostgres', () => {
             expect(comments[0].date).toBeDefined();
             expect(comments[0].username).toBeDefined();
             expect(comments[0].isDeleted).toEqual(false);
+            expect(comments[0].likecount).toEqual('0');
+            
         });
 
         it('should return empty array when comments are not found', async () => {
@@ -164,4 +172,25 @@ describe('CommentRepositoryPostgres', () => {
         });
     }
     );
+
+    describe('checkCommentAvailability function', () => {
+        it('should throw error when comment not available', async () => {
+            const fakeIdGenerator = () => '123'; // stub!
+            const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, fakeIdGenerator);
+
+            await expect(commentRepositoryPostgres.checkCommentAvailability('comment-123')).rejects.toThrowError(NotFoundError);
+        });
+
+        it('should not throw error when comment available', async () => {
+            const fakeIdGenerator = () => '123'; // stub
+            await UsersTableTestHelper.addUser({ id: 'user-123' });
+            await ThreadsTableTestHelper.addThread({ id: 'thread-123', username: 'user-123' });
+            await CommentsTableTestHelper.addComment({ id: 'comment-123', userId: 'user-123' });
+
+            const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, fakeIdGenerator);
+            const result = await commentRepositoryPostgres.checkCommentAvailability('comment-123');
+
+            expect(result).toBe(true);
+        });
+      });
 });

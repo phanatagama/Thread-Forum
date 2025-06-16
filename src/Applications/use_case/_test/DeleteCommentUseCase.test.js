@@ -48,6 +48,8 @@ describe('DeleteCommentUseCase', () => {
         await expect(deleteCommentUseCase.execute(useCasePayload))
             .rejects
             .toThrowError('DELETE_COMMENT_USE_CASE.COMMENT_NOT_FOUND');
+        expect(mockCommentRepository.getCommentById)
+            .toBeCalledWith(useCasePayload.commentId);
     }
     );
 
@@ -71,6 +73,8 @@ describe('DeleteCommentUseCase', () => {
         await expect(deleteCommentUseCase.execute(useCasePayload))
             .rejects
             .toThrowError('DELETE_COMMENT_USE_CASE.THREAD_ID_NOT_MATCH');
+        expect(mockCommentRepository.getCommentById)
+            .toBeCalledWith(useCasePayload.commentId);
     }
     );
 
@@ -95,6 +99,8 @@ describe('DeleteCommentUseCase', () => {
         await expect(deleteCommentUseCase.execute(useCasePayload))
             .rejects
             .toThrowError('DELETE_COMMENT_USE_CASE.USER_ID_NOT_MATCH');
+        expect(mockCommentRepository.getCommentById)
+            .toBeCalledWith(useCasePayload.commentId);
     }
     );
 

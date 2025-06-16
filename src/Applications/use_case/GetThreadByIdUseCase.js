@@ -30,6 +30,7 @@ class GetThreadByIdUseCase {
       username: comment.username,
       date: comment.date,
       content: comment.isDeleted ? "**komentar telah dihapus**" : comment.content,
+      likeCount: parseInt(comment.likecount),
     })
   }
 }
