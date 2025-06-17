@@ -22,7 +22,17 @@ describe('LikeUseCase', () => {
         mockThreadRepository.checkAvailableThread = jest.fn().mockImplementation(() => Promise.resolve(true));
         mockCommentRepository.checkCommentAvailability = jest.fn().mockImplementation(() => Promise.resolve(true));
         mockLikeRepository.isAlreadyLiked = jest.fn().mockImplementation(() => Promise.resolve(false));
-        mockLikeRepository.likeComment = jest.fn().mockImplementation(() => Promise.resolve('comment-123'));
+        mockLikeRepository.likeComment = jest.fn().mockImplementation(() => Promise.resolve({
+            id: 'like-123',
+            commentId: 'comment-123',
+            userId: 'user-123'
+          }));
+
+        mockLikeRepository.unlikeComment = jest.fn().mockImplementation(() => Promise.resolve({
+            id: 'like-123',
+            commentId: 'comment-123',
+            userId: 'user-123'
+        }));
 
         const likeUseCase = new LikeUseCase({
             threadRepository: mockThreadRepository,
@@ -34,11 +44,16 @@ describe('LikeUseCase', () => {
         const result = await likeUseCase.toggleLike(mockToggleLike);
 
         // Assert
-        expect(result).toEqual('comment-123');
+        expect(result).toEqual({
+            id: 'like-123',
+            commentId: 'comment-123',
+            userId: 'user-123'
+        });
         expect(mockThreadRepository.checkAvailableThread).toBeCalledWith('thread-123');
         expect(mockCommentRepository.checkCommentAvailability).toBeCalledWith('comment-123');
         expect(mockLikeRepository.isAlreadyLiked).toBeCalledWith('comment-123', 'user-123');
         expect(mockLikeRepository.likeComment).toBeCalledWith('comment-123', 'user-123');
+        expect(mockLikeRepository.unlikeComment).not.toBeCalled();
     });
 
     it('should orchestrating unlike action correctly', async () => {
@@ -58,7 +73,16 @@ describe('LikeUseCase', () => {
         mockThreadRepository.checkAvailableThread = jest.fn().mockImplementation(() => Promise.resolve(true));
         mockCommentRepository.checkCommentAvailability = jest.fn().mockImplementation(() => Promise.resolve(true));
         mockLikeRepository.isAlreadyLiked = jest.fn().mockImplementation(() => Promise.resolve(true));
-        mockLikeRepository.unlikeComment = jest.fn().mockImplementation(() => Promise.resolve('comment-123'));
+        mockLikeRepository.unlikeComment = jest.fn().mockImplementation(() => Promise.resolve({
+            id: 'like-123',
+            commentId: 'comment-123',
+            userId: 'user-123'
+        }));
+        mockLikeRepository.likeComment = jest.fn().mockImplementation(() => Promise.resolve({
+            id: 'like-123',
+            commentId: 'comment-123',
+            userId: 'user-123'
+        }));
 
         const likeUseCase = new LikeUseCase({
             threadRepository: mockThreadRepository,
@@ -70,10 +94,15 @@ describe('LikeUseCase', () => {
         const result = await likeUseCase.toggleLike(mockToggleLike);
 
         // Assert
-        expect(result).toEqual('comment-123');
+        expect(result).toEqual({
+            id: 'like-123',
+            commentId: 'comment-123',
+            userId: 'user-123'
+        });
         expect(mockThreadRepository.checkAvailableThread).toBeCalledWith('thread-123');
         expect(mockCommentRepository.checkCommentAvailability).toBeCalledWith('comment-123');
         expect(mockLikeRepository.isAlreadyLiked).toBeCalledWith('comment-123', 'user-123');
         expect(mockLikeRepository.unlikeComment).toBeCalledWith('comment-123', 'user-123');
+        expect(mockLikeRepository.likeComment).not.toBeCalled();
     });
 });
